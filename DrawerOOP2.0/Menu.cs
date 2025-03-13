@@ -18,7 +18,7 @@ namespace DrawerOOP2._0
             options = new List<MenuOption>
             {
                 new MenuOption("      Új      ", () => new DrawingManager().StartDrawing()),
-                new MenuOption("Mentett rajzok", () => new SaveManager().LoadDrawing()),
+                new MenuOption("Mentett rajzok", () => new SaveManager().LoadDrawingsList()),
                 new MenuOption("    Törlés    ", () => new DeleteManager().DeleteDrawing()),
                 new MenuOption("    Kilépés   ", () => Environment.Exit(0))
             };

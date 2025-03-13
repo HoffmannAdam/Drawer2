@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace DrawerOOP2._0
 {
@@ -12,69 +10,129 @@ namespace DrawerOOP2._0
 
         public void SaveDrawing(List<Drawing> drawings)
         {
-            string fileName = "rajz1.txt";
-            int index = 1;
+            string fileName = "rajz";
+            int fileIndex = 1;
+            string filePath;
 
-            while (File.Exists(fileName))
-                fileName = $"rajz{++index}.txt";
-
-            using (StreamWriter writer = new StreamWriter(fileName))
+            do
             {
-                foreach (var d in drawings)
-                    writer.WriteLine($"{d.X},{d.Y},{d.Color}");
+                filePath = $"{fileName}{fileIndex}.txt";
+                fileIndex++;
+            } while (File.Exists(filePath));
+
+            using (StreamWriter writer = new StreamWriter(filePath))
+            {
+                foreach (var drawing in drawings)
+                {
+                    writer.WriteLine($"{drawing.X},{drawing.Y},{drawing.Color}");
+                }
             }
 
+            drawings.Clear();
+            Console.ResetColor();
             Console.SetCursorPosition(0, Console.WindowHeight - 2);
-            Console.WriteLine($"A rajz '{fileName}' néven elmentve.");
+            Console.WriteLine($"The drawing has been saved as '{filePath}'.");
             Console.ReadKey();
         }
 
-        public void LoadDrawing()
+        public void LoadDrawing(string filePath, List<Drawing> drawings)
         {
             Console.Clear();
+            Console.CursorVisible = false;
+            drawings.Clear();
+
+            using (StreamReader reader = new StreamReader(filePath))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    var parts = line.Split(',');
+                    if (parts.Length == 3 &&
+                        int.TryParse(parts[0], out int x) &&
+                        int.TryParse(parts[1], out int y) &&
+                        Enum.TryParse(parts[2], true, out ConsoleColor color))
+                    {
+                        drawings.Add(new Drawing(x, y, color));
+                    }
+                }
+            }
+
+            foreach (var point in drawings)
+            {
+                Console.SetCursorPosition(point.X, point.Y);
+                Console.ForegroundColor = point.Color;
+                Console.Write('█');
+            }
+
+            Console.ResetColor();
+
+            ConsoleKey key;
+            do
+            {
+                key = Console.ReadKey(true).Key;
+            } while (key != ConsoleKey.Escape);
+
+            Console.Clear();
+            menu.Display();
+        }
+
+        public void LoadDrawingsList()
+        {
+            Console.CursorVisible = false;
+            Console.Clear();
             string[] files = Directory.GetFiles(Directory.GetCurrentDirectory(), "rajz*.txt");
+
             if (files.Length == 0)
             {
-                Console.WriteLine("Nincsenek mentett rajzok.");
+                Console.WriteLine("No saved drawings found.");
                 Console.ReadKey();
                 return;
             }
 
-            Console.SetCursorPosition(0, Console.WindowHeight - 1);
-            Console.WriteLine("Válassz egy rajzot (Enter-rel megnyitod, Esc-kilép)");
             int selectedIndex = 0;
-            ConsoleKey key;
+            ConsoleKeyInfo key;
 
             do
             {
                 Console.SetCursorPosition(0, 0);
+
                 for (int i = 0; i < files.Length; i++)
                 {
                     Console.SetCursorPosition(0, i);
                     if (i == selectedIndex)
                     {
                         Console.ForegroundColor = ConsoleColor.Green;
-                        Console.Write("> " + Path.GetFileName(files[i]));
+                        Console.Write($"> {Path.GetFileName(files[i])}");
                     }
                     else
                     {
-                        Console.Write("  " + Path.GetFileName(files[i]));
+                        Console.Write($"  {Path.GetFileName(files[i])}");
                     }
+
                     Console.ResetColor();
                 }
 
-                key = Console.ReadKey(true).Key;
-                if (key == ConsoleKey.UpArrow && selectedIndex > 0) selectedIndex--;
-                if (key == ConsoleKey.DownArrow && selectedIndex < files.Length - 1) selectedIndex++;
-                if (key == ConsoleKey.Enter) return;
-            } while (key != ConsoleKey.Escape);
+                Console.SetCursorPosition(0, files.Length + 1);
+                Console.WriteLine("Select a drawing to load (Press Esc to go back):");
 
-            if (key == ConsoleKey.Escape)
-            {
-                Console.ResetColor();
-                Console.Clear();
-                menu.Display();
-            }
+                key = Console.ReadKey(true);
+
+                switch (key.Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        if (selectedIndex > 0) selectedIndex--;
+                        break;
+
+                    case ConsoleKey.DownArrow:
+                        if (selectedIndex < files.Length - 1) selectedIndex++;
+                        break;
+
+                    case ConsoleKey.Enter:
+                        LoadDrawing(files[selectedIndex], new List<Drawing>());
+                        return;
+                }
+
+            } while (key.Key != ConsoleKey.Escape);
         }
     }
 }
