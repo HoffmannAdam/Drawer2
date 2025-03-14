@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -94,8 +95,6 @@ namespace DrawerOOP2._0
 
             do
             {
-                Console.SetCursorPosition(0, 0);
-
                 for (int i = 0; i < files.Length; i++)
                 {
                     Console.SetCursorPosition(0, i);
@@ -108,7 +107,6 @@ namespace DrawerOOP2._0
                     {
                         Console.Write($"  {Path.GetFileName(files[i])}");
                     }
-
                     Console.ResetColor();
                 }
 
@@ -122,17 +120,20 @@ namespace DrawerOOP2._0
                     case ConsoleKey.UpArrow:
                         if (selectedIndex > 0) selectedIndex--;
                         break;
-
                     case ConsoleKey.DownArrow:
                         if (selectedIndex < files.Length - 1) selectedIndex++;
                         break;
-
                     case ConsoleKey.Enter:
                         LoadDrawing(files[selectedIndex], new List<Drawing>());
                         return;
+                    case ConsoleKey.Escape:
+                        Console.Clear();
+                        menu.Display();
+                        break;
                 }
 
             } while (key.Key != ConsoleKey.Escape);
         }
+
     }
 }
