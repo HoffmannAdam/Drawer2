@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DrawerOOP2._0
+﻿namespace DrawerOOP2._0
 {
     internal class MenuRenderer
     {
@@ -31,7 +25,7 @@ namespace DrawerOOP2._0
         {
             if (oldIndex >= 0 && oldIndex < options.Count)
                 DrawMenuItem(oldIndex, false);
-                DrawMenuItem(newIndex, true);
+            DrawMenuItem(newIndex, true);
         }
 
         private void DrawMenuItem(int index, bool isSelected)

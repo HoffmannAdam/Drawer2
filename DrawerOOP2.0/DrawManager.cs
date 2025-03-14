@@ -1,11 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DrawerOOP2._0
+﻿namespace DrawerOOP2._0
 {
     internal class DrawingManager
     {
@@ -17,7 +10,7 @@ namespace DrawerOOP2._0
         {
             Console.Clear();
             Console.CursorVisible = true;
-            Console.WriteLine("1-White 2-Green 3-Yellow 4-Red 5-Blue 6-Cyan 7-Magenta Space-Drawing Del-Delete");
+            Console.WriteLine("1-Fehér 2-Zöld 3-Sárga 4-Piros 5-Kék 6-Cyán 7-Magenta Space-Rajzolás Del-Törlés");
             Console.SetCursorPosition(0, Console.WindowHeight - 1);
 
             int x = 0, y = 0;
@@ -54,7 +47,6 @@ namespace DrawerOOP2._0
                         break;
                 }
 
-                // Change color based on the key pressed
                 switch (key)
                 {
                     case ConsoleKey.D1: currentColor = ConsoleColor.White; break;
@@ -68,7 +60,6 @@ namespace DrawerOOP2._0
 
             } while (key != ConsoleKey.Escape);
 
-            // Save the drawing before returning to the menu
             saveManager.SaveDrawing(drawings);
             if (key == ConsoleKey.Escape)
             {
@@ -116,7 +107,6 @@ namespace DrawerOOP2._0
                         break;
                 }
 
-                // Change color based on the key pressed
                 switch (key)
                 {
                     case ConsoleKey.D1: currentColor = ConsoleColor.White; break;
@@ -138,7 +128,6 @@ namespace DrawerOOP2._0
             }
         }
     }
-
     internal class Drawing
     {
         public int X { get; set; }

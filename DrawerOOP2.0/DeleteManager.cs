@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DrawerOOP2._0
+﻿namespace DrawerOOP2._0
 {
     internal class DeleteManager
     {
@@ -20,7 +14,7 @@ namespace DrawerOOP2._0
 
             if (files.Length == 0)
             {
-                Console.WriteLine("No saved drawings found.");
+                Console.WriteLine("Nincsenek mentett rajzokk.");
                 Console.ReadKey();
                 menu.Display();
                 return;
@@ -56,7 +50,7 @@ namespace DrawerOOP2._0
                     case ConsoleKey.Enter:
                         File.Delete(files[selectedIndex]);
                         Console.SetCursorPosition(0, files.Length + 1);
-                        Console.WriteLine($"The drawing {Path.GetFileName(files[selectedIndex])} has been deleted.");
+                        Console.WriteLine($"{Path.GetFileName(files[selectedIndex])} törölve lett.");
                         Console.ReadKey();
                         menu.Display();
                         return;

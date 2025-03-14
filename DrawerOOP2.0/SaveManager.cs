@@ -1,9 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.IO;
-
-namespace DrawerOOP2._0
+﻿namespace DrawerOOP2._0
 {
     internal class SaveManager
     {
@@ -32,7 +27,7 @@ namespace DrawerOOP2._0
             drawings.Clear();
             Console.ResetColor();
             Console.SetCursorPosition(0, Console.WindowHeight - 2);
-            Console.WriteLine($"The drawing has been saved as '{filePath}'.");
+            Console.WriteLine($"A rajz '{filePath}' néven lett elmentve.");
             Console.ReadKey();
         }
 
@@ -85,7 +80,7 @@ namespace DrawerOOP2._0
 
             if (files.Length == 0)
             {
-                Console.WriteLine("No saved drawings found.");
+                Console.WriteLine("Nincsenek mentett rajzok.");
                 Console.ReadKey();
                 menu.Display();
                 return;
@@ -112,7 +107,7 @@ namespace DrawerOOP2._0
                 }
 
                 Console.SetCursorPosition(0, files.Length + 1);
-                Console.WriteLine("Select a drawing to load (Press Esc to go back):");
+                Console.WriteLine("Válassz ki egy rajzot a betöltéshez (Nyomj Esc-et a kilépéshez):");
 
                 key = Console.ReadKey(true);
 
