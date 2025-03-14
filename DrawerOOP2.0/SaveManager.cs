@@ -87,6 +87,7 @@ namespace DrawerOOP2._0
             {
                 Console.WriteLine("No saved drawings found.");
                 Console.ReadKey();
+                menu.Display();
                 return;
             }
 
@@ -134,6 +135,5 @@ namespace DrawerOOP2._0
 
             } while (key.Key != ConsoleKey.Escape);
         }
-
     }
 }
