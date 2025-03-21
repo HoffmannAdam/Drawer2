@@ -6,70 +6,35 @@
 
         public void SaveDrawing(List<Drawing> drawings)
         {
-            string fileName = "rajz";
-            int fileIndex = 1;
-            string filePath;
-
-            do
+            using (var context = new DrawingContext())
             {
-                filePath = $"{fileName}{fileIndex}.txt";
-                fileIndex++;
-            } while (File.Exists(filePath));
-
-            using (StreamWriter writer = new StreamWriter(filePath))
-            {
-                foreach (var drawing in drawings)
+                var drawingEntities = drawings.Select(d => new DrawingEntity
                 {
-                    writer.WriteLine($"{drawing.X},{drawing.Y},{drawing.Color}");
-                }
-            }
+                    X = d.X,
+                    Y = d.Y,
+                    Color = d.Color.ToString()
+                }).ToList();
 
-            drawings.Clear();
-            Console.ResetColor();
-            Console.SetCursorPosition(0, Console.WindowHeight - 2);
-            Console.WriteLine($"A rajz '{filePath}' néven lett elmentve.");
-            Console.ReadKey();
+                context.Drawings.AddRange(drawingEntities);
+                context.SaveChanges();
+            }
         }
 
-        public void LoadDrawing(string filePath, List<Drawing> drawings)
+        public void LoadDrawing(int drawingId, List<Drawing> drawings)
         {
-            Console.Clear();
-            Console.CursorVisible = false;
-            drawings.Clear();
-
-            using (StreamReader reader = new StreamReader(filePath))
+            using (var context = new DrawingContext())
             {
-                string line;
-                while ((line = reader.ReadLine()) != null)
+                var drawingEntities = context.Drawings.Where(d => d.Id == drawingId).ToList();
+
+                drawings.Clear();
+                foreach (var entity in drawingEntities)
                 {
-                    var parts = line.Split(',');
-                    if (parts.Length == 3 &&
-                        int.TryParse(parts[0], out int x) &&
-                        int.TryParse(parts[1], out int y) &&
-                        Enum.TryParse(parts[2], true, out ConsoleColor color))
+                    if (Enum.TryParse(entity.Color, out ConsoleColor color))
                     {
-                        drawings.Add(new Drawing(x, y, color));
+                        drawings.Add(new Drawing(entity.X, entity.Y, color));
                     }
                 }
             }
-
-            foreach (var point in drawings)
-            {
-                Console.SetCursorPosition(point.X, point.Y);
-                Console.ForegroundColor = point.Color;
-                Console.Write('█');
-            }
-
-            Console.ResetColor();
-
-            ConsoleKey key;
-            do
-            {
-                key = Console.ReadKey(true).Key;
-            } while (key != ConsoleKey.Escape);
-
-            Console.Clear();
-            menu.Display();
         }
 
         public void LoadDrawingsList()
@@ -129,6 +94,19 @@
                 }
 
             } while (key.Key != ConsoleKey.Escape);
+        }
+
+        private void LoadDrawing(string v, List<Drawing> drawings)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<int> GetAllDrawingIds()
+        {
+            using (var context = new DrawingContext())
+            {
+                return context.Drawings.Select(d => d.Id).ToList();
+            }
         }
     }
 }
